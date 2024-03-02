@@ -4,7 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -78,6 +81,15 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }.start();
+
+        //Check for internet
+        ConnectivityManager connection = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = connection.getActiveNetworkInfo();
+        boolean hasInternet = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        if(!hasInternet){
+            Toast.makeText(MainActivity.this, "Need Internet Connection!", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         //Check if user is logged in
         FirebaseUser currentUser = mAuth.getCurrentUser();
