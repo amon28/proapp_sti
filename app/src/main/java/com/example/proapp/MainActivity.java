@@ -6,7 +6,9 @@ import androidx.cardview.widget.CardView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.net.EthernetNetworkSpecifier;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -28,6 +30,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import utils.NetworkChangeListener;
+
 import java.util.Timer;
 
 public class MainActivity extends AppCompatActivity {
@@ -39,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     private CardView cView;
     private EditText email_text;
     private EditText password_text;
+
+    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,13 +89,17 @@ public class MainActivity extends AppCompatActivity {
         }.start();
 
         //Check for internet
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeListener, intentFilter);
+
+        /*
         ConnectivityManager connection = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = connection.getActiveNetworkInfo();
         boolean hasInternet = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
         if(!hasInternet){
             Toast.makeText(MainActivity.this, "Need Internet Connection!", Toast.LENGTH_SHORT).show();
             return;
-        }
+        }*/
 
         //Check if user is logged in
         FirebaseUser currentUser = mAuth.getCurrentUser();
