@@ -4,35 +4,27 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
-import android.net.EthernetNetworkSpecifier;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import utils.NetworkChangeListener;
-
-import java.util.Timer;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -65,21 +57,26 @@ public class MainActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+
         //Setup margin for card view containing login
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) cView.getLayoutParams();
+        int currentMarginBottom = params.bottomMargin;
         params.setMargins(0,0,0,-1020);
         cView.setLayoutParams(params);
 
         //Animate card view to go up
+
         new CountDownTimer(100,10){
             public void onTick(long millisUntilFinished){}
             public void onFinish(){
-                new CountDownTimer(500,10){
+                new CountDownTimer(1000,10){
                     public void onTick(long x){
                         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) cView.getLayoutParams();
                         int bottomValue = params.bottomMargin;
-                        params.setMargins(0,0,0,bottomValue+21);
-                        cView.setLayoutParams(params);
+                        if(bottomValue < currentMarginBottom){
+                            params.setMargins(0,0,0,bottomValue+21);
+                            cView.setLayoutParams(params);
+                        }
                     }
 
                     public void onFinish(){}
@@ -121,8 +118,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void register_views(){
         RegisterEmailButton = (Button) findViewById(R.id.register_email_button);
-
-
         RegisterEmailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
@@ -145,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
+
             register_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -156,7 +152,9 @@ public class MainActivity extends AppCompatActivity {
                         return;
                     }
 
-                    mAuth.createUserWithEmailAndPassword(register_email, register_password).addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
+                    Task<AuthResult> createUser = mAuth.createUserWithEmailAndPassword(register_email, register_password);
+
+                    createUser.addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
@@ -171,11 +169,13 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     });
+                    createUser.addOnFailureListener(MainActivity.this, new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(MainActivity.this, "Failed To Register", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
-            });
-
-            register_button.setOnClickListener(register -> {
-
             });
             }
         });
@@ -199,7 +199,9 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
+                Task<AuthResult> signIn = mAuth.signInWithEmailAndPassword(email, password);
+
+                signIn.addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
