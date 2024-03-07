@@ -65,6 +65,38 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="Student Number"
+                android:textColor="@color/black"
+                android:textStyle="bold"/>
+
+            <EditText
+                android:id="@+id/register_snumber_input_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:inputType="numberDecimal"
+                android:tooltipText="Student Number"
+                android:textColor="@color/black"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Full Name"
+                android:textColor="@color/black"
+                android:textStyle="bold"/>
+
+            <EditText
+                android:id="@+id/register_name_input_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:inputType="text"
+                android:tooltipText="Name"
+                android:textColor="@color/black"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="Password"
                 android:textColor="@color/black"
                 android:textStyle="bold"/>
@@ -86,6 +118,29 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Confirm Password"
+                android:textColor="@color/black"
+                android:textStyle="bold"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:passwordToggleTint="@color/black"
+                app:passwordToggleEnabled="true">
+
+                <EditText
+                    android:id="@+id/register_confirm_password_input_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:inputType="textPassword"
+                    android:tooltipText="Password"
+                    android:textColor="@color/black"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
